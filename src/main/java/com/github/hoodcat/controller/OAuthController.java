@@ -15,16 +15,18 @@ public class OAuthController {
     private OAuthService oauthService;
 
     @GetMapping("")
-    public String reqAuthCode() {
-        return "redirect:" + oauthService.getAuthCodeURL();
+    public String reqAuthCode(
+            @RequestParam(value = "mall_id", required = false, defaultValue = "hoodcat123") String mallId) {
+        return "redirect:" + oauthService.getAuthCodeURL(mallId);
     }
 
     @GetMapping("code")
-    public String procAuthCode(@RequestParam(value = "code", required = false, defaultValue = "is Empty") String code) {
+    public String procAuthCode(
+            @RequestParam(value = "code", required = false, defaultValue = "is Empty") String code) {
         oauthService.setCode(code);
         return "redirect:/oauth/token";
     }
-    
+
     @GetMapping("token")
     public String procAuthToken() {
         oauthService.genAccessToken();

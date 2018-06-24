@@ -20,21 +20,22 @@ public class OAuthService {
     private OAuthInfo oauthInfo;
 
     public void genAccessToken() {
-        String encodedID = Base64EDecoder.encode(oauthInfo.getClientId() + ":" + oauthInfo.getClientSecret());
-        OkHttpClient client = new OkHttpClient.Builder().followRedirects(true).build();
-        
+        String encodedID = Base64EDecoder.encode(
+                oauthInfo.getClientId() + ":" + oauthInfo.getClientSecret());
+        OkHttpClient client = new OkHttpClient.Builder().followRedirects(true)
+                .build();
+
         RequestBody parameter = new FormBody.Builder()
                 .add("grant_type", "authorization_code")
                 .add("code", oauthInfo.getCode())
-                .add("redirect_uri", oauthInfo.getRedirectURL())
-                .build();
-        
+                .add("redirect_uri", oauthInfo.getRedirectURL()).build();
+
         Request request = new Request.Builder()
-                .url(oauthInfo.getTokenGenURL())
+                .url(oauthInfo.getTokenGenURL().replace("{{mallid}}",
+                        "hoodcat123"))
                 .addHeader("Authorization", "Basic " + encodedID)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .post(parameter)
-                .build();
+                .post(parameter).build();
 
         try {
             Response response = client.newCall(request).execute();
@@ -45,8 +46,8 @@ public class OAuthService {
         }
     }
 
-    public String getAuthCodeURL() {
-        return oauthInfo.getAuthCodeURL();
+    public String getAuthCodeURL(String mallId) {
+        return oauthInfo.getAuthCodeURL(mallId);
     }
 
     public void setCode(String code) {

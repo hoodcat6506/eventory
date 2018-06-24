@@ -24,17 +24,17 @@ public class OAuthInfo {
     private String respType;
     @Value("${com.cafe24.oauth.state}")
     private String state;
-    @Value("${com.cafe24.oauth.access-token}")
-    private String accessToken;
-    @Value("${com.cafe24.oauth.refresh-token}")
-    private String refreshToken;
     private String code;
 
     public String getAuthCodeURL() {
-        String url = String.format(
-                "%s?response_type=%s&" + "client_id=%s&" + "state=%s&" + "redirect_uri=%s&" + "scope=%s", authURL,
-                respType, clientId, state, redirectURL, scope);
+        return this.getAuthCodeURL("hoodcat123");
+    }
 
-        return url;
+    public String getAuthCodeURL(String mallId) {
+        String url = String.format(
+                "%s?response_type=%s&" + "client_id=%s&" + "state=%s&"
+                        + "redirect_uri=%s&" + "scope=%s",
+                authURL, respType, clientId, state, redirectURL, scope);
+        return url.replace("{{mallid}}", mallId);
     }
 }
